@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>هدية رزان</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=Tajawal:wght@400;500;700;800&display=swap">
+<style>
+/* Layout: comic-sticker panels on a polka-dot sky. Big hero cat, then stacked playful panels: reasons, quiz, game, coupons, letter. */
+:root{
+  --bg:#d9f0ff; --dots:#ffffff; --card:#ffffff; --fg:#2a1a3e; --muted:#65567b; --ink:#2a1a3e;
+  --pink:#ff86ae; --yellow:#ffd45e; --mint:#6fd9b8; --sky:#7cc4ff; --lilac:#c9b6ff;
+  --display:'Lalezar','Tajawal','Segoe UI',Tahoma,sans-serif;
+  --body:'Tajawal','Segoe UI',Tahoma,sans-serif;
+  --sh:5px 5px 0 var(--ink);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1a1330; --dots:#2f2557; --card:#2c2250; --fg:#fff1f8; --muted:#c3b5e0; --ink:#0c0820;
+    --pink:#ff7aa6; --yellow:#ffcf4d; --mint:#5fd0ae; --sky:#6cb6f2; --lilac:#b49cf5; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1a1330; --dots:#2f2557; --card:#2c2250; --fg:#fff1f8; --muted:#c3b5e0; --ink:#0c0820;
+  --pink:#ff7aa6; --yellow:#ffcf4d; --mint:#5fd0ae; --sky:#6cb6f2; --lilac:#b49cf5; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; direction:rtl; font-family:var(--body); font-size:17px; line-height:1.7;
+  color:var(--fg); background:var(--bg);
+  background-image:radial-gradient(var(--dots) 2.5px,transparent 3px); background-size:34px 34px;
+  padding-block:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+}
+.page{overflow-x:clip}
+.wrap{max-width:980px; margin-inline:auto; padding-block:20px 56px; display:flex; flex-direction:column; gap:44px}
+button{font-family:inherit}
+:focus-visible{outline:4px solid var(--yellow); outline-offset:3px}
+
+.top{display:flex; justify-content:space-between; align-items:center; gap:10px}
+.mini{
+  font-weight:800; font-size:.95rem; background:var(--card); color:var(--fg);
+  border:3px solid var(--ink); border-radius:999px; padding:2px 16px; cursor:pointer; box-shadow:3px 3px 0 var(--ink);
+}
+.mini:active{transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink)}
+
+.hero{display:grid; grid-template-columns:1.1fr .9fr; gap:20px; align-items:center}
+.tag{
+  display:inline-block; background:var(--yellow); color:var(--ink); border:3px solid var(--ink);
+  border-radius:999px; padding:2px 18px; font-weight:800; box-shadow:3px 3px 0 var(--ink); transform:rotate(-2deg);
+}
+h1{
+  font-family:var(--display); font-weight:400; font-size:clamp(84px,19vw,160px); line-height:1.05; margin:12px 0 4px;
+  color:var(--pink); -webkit-text-stroke:8px var(--ink); paint-order:stroke fill; text-shadow:6px 6px 0 var(--ink);
+}
+.lead{font-size:1.2rem; max-width:30ch; margin:0 0 22px}
+.btn{
+  font-family:var(--display); font-size:1.4rem; background:var(--mint); color:var(--ink);
+  border:3px solid var(--ink); border-radius:999px; padding:6px 28px; box-shadow:var(--sh); cursor:pointer;
+  transition:transform .12s, box-shadow .12s;
+}
+.btn:hover{transform:translate(-2px,-2px); box-shadow:7px 7px 0 var(--ink)}
+.btn:active{transform:translate(4px,4px); box-shadow:1px 1px 0 var(--ink)}
+.btn:disabled{opacity:.55; cursor:default; transform:none; box-shadow:var(--sh)}
+.btn.pink{background:var(--pink)}
+
+.stage{position:relative; display:flex; justify-content:center; align-items:flex-end; gap:6px; padding-top:46px; padding-bottom:28px}
+.stage [data-cat]{width:56%; max-width:240px; cursor:pointer; -webkit-tap-highlight-color:transparent}
+.stage .girl{width:44%; max-width:190px; cursor:pointer; -webkit-tap-highlight-color:transparent}
+.hint{position:absolute; bottom:-6px; font-weight:700; color:var(--muted); font-size:.95rem}
+.bubble{
+  position:absolute; top:0; inset-inline-start:2%; background:#fff; color:#2a1a3e; border:3px solid var(--ink);
+  border-radius:20px; padding:4px 18px; font-weight:800; box-shadow:3px 3px 0 var(--ink); transform:rotate(3deg);
+}
+.bubble::after{
+  content:""; position:absolute; bottom:-14px; inset-inline-end:26px; width:18px; height:18px; background:#fff;
+  border-inline-end:3px solid var(--ink); border-bottom:3px solid var(--ink); transform:rotate(45deg) skew(10deg,10deg);
+}
+.heart{
+  position:absolute; pointer-events:none; font-size:30px; color:var(--pink); -webkit-text-stroke:2px var(--ink);
+  paint-order:stroke fill; animation:rise 1s ease-out forwards; z-index:3;
+}
+
+.panel{
+  background:var(--card); border:4px solid var(--ink); border-radius:28px; box-shadow:8px 8px 0 var(--ink);
+  padding:26px clamp(16px,4vw,36px) 30px;
+}
+.panel h2{font-family:var(--display); font-weight:400; font-size:clamp(30px,6vw,46px); line-height:1.25; margin:0 0 2px}
+.panel h2 span{background:linear-gradient(transparent 58%,var(--c,var(--yellow)) 58%); padding-inline:4px}
+.sub{color:var(--muted); margin:0 0 22px}
+
+.reasons{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:18px}
+.reason{
+  display:flex; gap:12px; align-items:center; background:var(--c); color:var(--ink); border:3px solid var(--ink);
+  border-radius:20px; padding:12px 16px; box-shadow:4px 4px 0 var(--ink); transition:transform .15s;
+}
+.reason:nth-child(odd){transform:rotate(-1deg)}
+.reason:nth-child(even){transform:rotate(1deg)}
+.reason:hover{transform:rotate(0) translateY(-4px)}
+.reason [data-cat]{width:78px; flex:none}
+.reason b{font-family:var(--display); font-weight:400; font-size:1.45rem; display:block; line-height:1.2}
+.reason p{margin:0; line-height:1.5; font-weight:500}
+
+.progress{height:16px; border:3px solid var(--ink); border-radius:99px; overflow:hidden; background:var(--bg); margin-bottom:22px}
+.progress i{display:block; height:100%; width:0; background:var(--pink); transition:width .3s}
+.q{font-family:var(--display); font-size:clamp(22px,4.5vw,32px); line-height:1.4; margin:0 0 16px}
+.opts{display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.opt{
+  font-size:1rem; font-weight:700; text-align:start; background:var(--bg); color:var(--fg); border:3px solid var(--ink);
+  border-radius:16px; padding:12px 16px; cursor:pointer; box-shadow:3px 3px 0 var(--ink); transition:transform .1s, background .1s;
+}
+.opt:hover{background:var(--yellow); color:var(--ink); transform:translate(-1px,-1px)}
+.opt:active{transform:translate(3px,3px); box-shadow:0 0 0 var(--ink)}
+.result{display:grid; justify-items:center; gap:8px; text-align:center; animation:pop .4s ease-out}
+.result [data-cat]{width:min(70%,230px)}
+.result h3{font-family:var(--display); font-weight:400; font-size:clamp(34px,7vw,52px); margin:0; line-height:1.2; color:var(--pink); -webkit-text-stroke:5px var(--ink); paint-order:stroke fill}
+.result p{max-width:46ch; margin:0 0 8px; font-size:1.1rem}
+
+.mem-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; max-width:520px; margin:14px auto}
+.mem{aspect-ratio:1; padding:6px; cursor:pointer; position:relative; background:var(--lilac); color:var(--ink); border:3px solid var(--ink); border-radius:16px; box-shadow:3px 3px 0 var(--ink); font-family:var(--display); font-size:2rem; line-height:1; -webkit-tap-highlight-color:transparent; touch-action:manipulation}
+.mem .back{display:none; width:100%}
+.mem.on .back,.mem.done .back{display:block; animation:pop .25s ease-out}
+.mem.on .face,.mem.done .face{display:none}
+.mem.done{background:var(--mint); box-shadow:none}
+.hud{display:flex; justify-content:space-between; gap:12px; font-family:var(--display); font-size:1.5rem; max-width:520px; margin:0 auto}
+.field{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; max-width:520px; margin:14px auto}
+.hole{
+  position:relative; aspect-ratio:1; padding:0; cursor:pointer; overflow:hidden; background:var(--bg);
+  border:3px solid var(--ink); border-radius:18px; touch-action:manipulation; -webkit-tap-highlight-color:transparent;
+}
+.hole .pop{position:absolute; inset:6% 14% auto; transform:translateY(105%); transition:transform .16s ease-out}
+.hole.up .pop{transform:translateY(8%)}
+.hole .box{
+  position:absolute; inset:auto 5% 0 5%; height:50%; background:#d9a066; border:3px solid var(--ink); border-bottom:0;
+  border-radius:10px 10px 0 0;
+}
+.hole .box::before{content:""; position:absolute; top:10px; left:35%; right:35%; height:7px; background:#b57d45; border-radius:9px}
+.msg{text-align:center; font-weight:800; min-height:1.8em; margin:6px 0 12px}
+.center{display:flex; justify-content:center}
+
+.coupons{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px}
+.coupon{
+  position:relative; min-height:150px; display:grid; place-items:center; text-align:center; padding:16px;
+  background:var(--c); color:var(--ink); border:3px dashed var(--ink); border-radius:18px; cursor:pointer; font-size:1rem;
+  transition:transform .15s;
+}
+.coupon:hover{transform:rotate(-1deg) scale(1.02)}
+.coupon .front{display:grid; justify-items:center; gap:2px; font-family:var(--display); font-size:1.3rem}
+.coupon .front [data-cat]{width:70px}
+.coupon .back{display:none; animation:pop .35s ease-out}
+.coupon.open{border-style:solid; box-shadow:4px 4px 0 var(--ink)}
+.coupon.open .front{display:none}
+.coupon.open .back{display:block}
+.coupon h3{font-family:var(--display); font-weight:400; font-size:1.7rem; margin:0 0 4px; line-height:1.2}
+.coupon p{margin:0; font-weight:700; line-height:1.55}
+
+.letter{position:relative; display:grid; justify-items:center; gap:18px}
+.paper{
+  width:min(100%,560px); background:#fff3b0; color:#2a1a3e; border:3px solid var(--ink); border-radius:6px;
+  box-shadow:6px 6px 0 var(--ink); padding:22px 24px; transform:rotate(-1deg); animation:pop .4s ease-out;
+  background-image:repeating-linear-gradient(transparent 0 36px,rgba(42,26,62,.13) 36px 38px); line-height:38px;
+  white-space:pre-line; font-weight:500; font-size:1.1rem; min-height:120px;
+}
+.sign{font-family:var(--display); font-size:1.6rem; color:var(--pink); -webkit-text-stroke:4px var(--ink); paint-order:stroke fill}
+
+footer{display:grid; justify-items:center; gap:6px; text-align:center; font-weight:800}
+.row{display:flex; justify-content:center; gap:14px; align-items:end}
+.row [data-cat]{width:clamp(70px,18vw,110px)}
+
+.kick{margin:0 0 6px; font-weight:800; color:var(--muted); font-size:.95rem}
+.checkin{background:var(--card); border:3px solid var(--ink); border-radius:22px; box-shadow:var(--sh); padding:16px 18px; max-width:440px; text-align:start; min-height:160px}
+.checkin .q{font-size:1.3rem; margin:0 0 12px}
+.checkin .opts{grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px}
+.checkin .opt{padding:8px 12px; font-size:.95rem}
+.step{display:inline-block; background:var(--yellow); color:var(--ink); border:2px solid var(--ink); border-radius:99px; padding:0 12px; font-weight:800; font-size:.85rem; margin-bottom:6px}
+.reply{margin:0; font-weight:800; font-size:1.15rem; line-height:1.7; animation:pop .35s ease-out}
+.row [data-girl]{width:clamp(80px,20vw,120px)}
+.cat{display:block; width:100%; height:auto; overflow:visible}
+.cat .tail{transform-origin:150px 175px; animation:wag 2.6s ease-in-out infinite}
+.cat .eye{transform-box:fill-box; transform-origin:center; animation:blink 4.6s infinite}
+.bob{animation:bob 3.2s ease-in-out infinite}
+.hop{animation:hop .6s ease-out}
+@keyframes wag{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(10deg)}}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+@keyframes bob{50%{transform:translateY(-8px)}}
+@keyframes hop{30%{transform:translateY(-24px) scale(1.04,.96)}60%{transform:translateY(0) scale(.97,1.03)}}
+@keyframes rise{from{opacity:1; transform:translateY(0) scale(.6)}to{opacity:0; transform:translateY(-100px) scale(1.3)}}
+@keyframes pop{from{transform:scale(.8); opacity:0}to{transform:scale(1); opacity:1}}
+
+@media (max-width:720px){
+  .hero{grid-template-columns:1fr; text-align:center}
+  .lead{margin-inline:auto}
+  .stage{max-width:420px; margin-inline:auto}
+  .checkin{margin-inline:auto}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation:none !important; transition:none !important}
+}
+[hidden]{display:none!important}
+img{max-width:100%}
+</style>
+</head>
+<body>
+<div class="page" dir="rtl" lang="ar">
+<main class="wrap">
+
+  <div class="top">
+    <button class="mini" id="soundBtn" type="button" aria-pressed="true">الصوت: خدام</button>
+    <button class="mini" id="themeBtn" type="button">الوضع الليلي</button>
+  </div>
+
+  <header class="hero">
+    <div>
+      <span class="tag">هدية لأغلى صاحبة</span>
+      <h1>رزان</h1>
+      <p class="lead">الموقع هادا كامل تاعك. فيه قطط تهدر معاك، وأسئلة، ولعبة، ومفاجآت صغار.</p>
+      <div class="checkin" id="checkin"></div>
+    </div>
+    <div class="stage" id="stage">
+      <div class="bubble" id="bubble">ميياو، أهلا رزان</div>
+      <div class="girl" id="girl" data-girl role="button" tabindex="0" aria-label="رزان"></div>
+      <div class="bob" data-cat="peach" data-acc="crown" id="heroCat" role="button" tabindex="0" aria-label="اضغطي على القطة"></div>
+      <span class="hint">اضغطي على القطة</span>
+    </div>
+  </header>
+
+  <section class="panel" id="reasons" style="--c:var(--pink)">
+    <h2><span>علاه رزان؟</span></h2>
+    <p class="sub">ستة أسباب صغار من بين أسباب بزاف.</p>
+    <div class="reasons" id="reasonGrid"></div>
+  </section>
+
+  <section class="panel" id="memory" style="--c:var(--sky)">
+    <h2><span>لعبة الذاكرة</span></h2>
+    <p class="sub">لمّي القطط المتشابهين. اقلبي بطاقتين كل مرة.</p>
+    <div class="hud"><span>الحركات: <b id="moves">0</b></span><span>لقيتي: <b id="pairs">0</b>/6</span></div>
+    <div class="mem-grid" id="memGrid"></div>
+    <div class="msg" id="memMsg">ابدأي واقلبي أي بطاقة</div>
+    <div class="center"><button class="btn" id="memReset" type="button">لعبة جديدة</button></div>
+  </section>
+
+  <section class="panel" id="game" style="--c:var(--mint)">
+    <h2><span>اصطادي القطط</span></h2>
+    <p class="sub">القطط خرجو من الصناديق. اضغطي عليهم قبل ما يغيبو. عندك عشرين ثانية.</p>
+    <div class="hud"><span>النقاط: <b id="score">0</b></span><span>الوقت: <b id="time">20</b></span></div>
+    <div class="field" id="field"></div>
+    <div class="msg" id="gameMsg">واجدة؟</div>
+    <div class="center"><button class="btn pink" id="playBtn" type="button">يلا نلعبو</button></div>
+  </section>
+
+  <section class="panel" id="coupons" style="--c:var(--yellow)">
+    <h2><span>افتحيها كي...</span></h2>
+    <p class="sub">اضغطي على كل بطاقة وشوفي واش فيها.</p>
+    <div class="coupons" id="couponGrid"></div>
+  </section>
+
+  <section class="panel" id="letter" style="--c:var(--lilac)">
+    <h2><span>رسالة صغيرة</span></h2>
+    <p class="sub">آخر مفاجأة، وهي الأهم.</p>
+    <div class="letter" id="letterBox">
+      <div data-cat="snow" data-acc="scarf" style="width:130px" class="bob"></div>
+      <button class="btn" id="openLetter" type="button">افتحي الرسالة</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="row">
+      <div data-cat="butter" data-acc="bow"></div>
+      <div data-girl></div>
+      <div data-cat="ash" data-acc="glasses"></div>
+    </div>
+    <span>مصنوع بالحب لرزان</span>
+  </footer>
+
+</main>
+</div>
+<script>
+(function(){
+var $=function(s,r){return (r||document).querySelector(s)};
+var INK='var(--ink)';
+var FURS={
+  peach:{fur:'#ffb36b',belly:'#fff0dc',ear:'#ff9bb5',stripe:'#e8872f'},
+  snow:{fur:'#ffffff',belly:'#fdf2f8',ear:'#ffb3c7',stripe:'#d7d0ee'},
+  ash:{fur:'#aab4d4',belly:'#eef1fb',ear:'#ff9bb5',stripe:'#7f8bb5'},
+  night:{fur:'#6a5d8f',belly:'#a99fcf',ear:'#ff8fb0',stripe:'#463b66'},
+  butter:{fur:'#ffe27a',belly:'#fff8d6',ear:'#ff9bb5',stripe:'#e9b92e'},
+  mint:{fur:'#8fe3c8',belly:'#e6fff6',ear:'#ff9bb5',stripe:'#52c4a0'}
+};
+var S='stroke="'+INK+'" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"';
+var ACC={
+  bow:'<g transform="translate(62 46)"><path d="M0 0L-19 -11V11ZM0 0L19 -11V11Z" fill="#ff5c93" '+S+'/><circle r="6" fill="#ff5c93" '+S+'/></g>',
+  crown:'<path d="M72 52L76 24L90 40L100 18L110 40L124 24L128 52Z" fill="#ffd45e" '+S+'/><circle cx="100" cy="18" r="4" fill="#ff5c93"/>',
+  glasses:'<g fill="rgba(255,255,255,.4)" '+S+'><circle cx="76" cy="92" r="18"/><circle cx="124" cy="92" r="18"/><path d="M94 92H106" fill="none"/></g>',
+  scarf:'<path d="M54 136Q100 160 146 136L150 152Q100 176 50 152Z" fill="#7cc4ff" '+S+'/><path d="M120 156L128 182L140 176L134 152" fill="#7cc4ff" '+S+'/>',
+  party:'<path d="M82 52L100 6L118 52Z" fill="#c9b6ff" '+S+'/><circle cx="100" cy="7" r="6" fill="#ffd45e" '+S+'/><path d="M90 38H110" stroke="#fff" stroke-width="4" stroke-linecap="round"/>'
+};
+function cat(kind,acc,mood){
+  var c=FURS[kind]||FURS.peach, eyes;
+  if(mood==='happy'){
+    eyes='<g fill="none" '+S+' stroke-width="5"><path d="M65 96Q76 80 87 96"/><path d="M113 96Q124 80 135 96"/></g>';
+  }else{
+    eyes='<g class="eye"><ellipse cx="76" cy="92" rx="9" ry="12" fill="'+INK+'"/><circle cx="79" cy="87" r="3.6" fill="#fff"/></g>'+
+         '<g class="eye"><ellipse cx="124" cy="92" rx="9" ry="12" fill="'+INK+'"/><circle cx="127" cy="87" r="3.6" fill="#fff"/></g>';
+  }
+  return '<svg class="cat" viewBox="0 0 200 212" role="img" aria-label="قطة كرتونية">'+
+    '<g class="tail"><path d="M150 176C192 176 200 130 176 116" fill="none" stroke="'+INK+'" stroke-width="18" stroke-linecap="round"/>'+
+    '<path d="M150 176C192 176 200 130 176 116" fill="none" stroke="'+c.fur+'" stroke-width="9" stroke-linecap="round"/></g>'+
+    '<ellipse cx="100" cy="158" rx="52" ry="44" fill="'+c.fur+'" '+S+'/>'+
+    '<ellipse cx="100" cy="170" rx="28" ry="28" fill="'+c.belly+'"/>'+
+    '<ellipse cx="76" cy="198" rx="16" ry="9" fill="'+c.belly+'" '+S+'/><ellipse cx="124" cy="198" rx="16" ry="9" fill="'+c.belly+'" '+S+'/>'+
+    '<path d="M48 76L44 26Q44 20 50 23L90 48" fill="'+c.fur+'" '+S+'/><path d="M152 76L156 26Q156 20 150 23L110 48" fill="'+c.fur+'" '+S+'/>'+
+    '<path d="M56 62L54 38L76 52Z" fill="'+c.ear+'"/><path d="M144 62L146 38L124 52Z" fill="'+c.ear+'"/>'+
+    '<ellipse cx="100" cy="94" rx="58" ry="48" fill="'+c.fur+'" '+S+'/>'+
+    '<path d="M100 48V62M86 51L88 63M114 51L112 63" stroke="'+c.stripe+'" stroke-width="5" stroke-linecap="round"/>'+
+    '<ellipse cx="58" cy="112" rx="10" ry="6" fill="#ff8fb0" opacity=".65"/><ellipse cx="142" cy="112" rx="10" ry="6" fill="#ff8fb0" opacity=".65"/>'+
+    eyes+
+    '<path d="M94 104Q100 99 106 104Q100 112 94 104Z" fill="#ff6f9c" '+S+' stroke-width="2.5"/>'+
+    '<path d="M100 110V113M100 113Q94 121 87 115M100 113Q106 121 113 115" fill="none" '+S+' stroke-width="3.5"/>'+
+    '<path d="M44 104L16 98M44 113L14 115M156 104L184 98M156 113L186 115" fill="none" '+S+' stroke-width="3"/>'+
+    (ACC[acc]||'')+'</svg>';
+}
+function paint(root){
+  (root||document).querySelectorAll('[data-cat]').forEach(function(el){
+    el.innerHTML=cat(el.dataset.cat,el.dataset.acc||'',el.dataset.mood||'');
+  });
+}
+/* Razan: original cartoon girl, black hair, black eyes */
+function girl(){
+  var H='#1b1424', K='#ffd9c0', E='#0d0813';
+  return '<svg class="cat" viewBox="0 0 200 220" role="img" aria-label="رزان">'+
+    '<path d="M26 120C22 40 178 40 174 120L178 178Q178 196 158 196H42Q22 196 22 178Z" fill="'+H+'" '+S+'/>'+
+    '<path d="M36 222Q38 170 100 168Q162 170 164 222Z" fill="#ff86ae" '+S+'/>'+
+    '<rect x="88" y="146" width="24" height="28" rx="8" fill="'+K+'" '+S+'/>'+
+    '<path d="M82 172Q100 190 118 172" fill="none" '+S+'/>'+
+    '<ellipse cx="100" cy="108" rx="54" ry="50" fill="'+K+'" '+S+'/>'+
+    '<path d="M44 108Q40 48 100 48Q160 48 156 108Q142 86 120 80Q104 94 82 82Q58 90 44 108Z" fill="'+H+'" '+S+'/>'+
+    '<path d="M64 70Q84 58 108 62" fill="none" stroke="#6b5a8c" stroke-width="5" stroke-linecap="round"/>'+
+    '<path d="M56 62L54 30L84 52Z" fill="#ffd45e" '+S+'/><path d="M144 62L146 30L116 52Z" fill="#ffd45e" '+S+'/>'+
+    '<path d="M60 54L59 40L74 50Z" fill="#ff9bb5"/
