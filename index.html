@@ -1,3 +1,5 @@
+
+  
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
@@ -340,4 +342,230 @@ function girl(){
     '<path d="M44 108Q40 48 100 48Q160 48 156 108Q142 86 120 80Q104 94 82 82Q58 90 44 108Z" fill="'+H+'" '+S+'/>'+
     '<path d="M64 70Q84 58 108 62" fill="none" stroke="#6b5a8c" stroke-width="5" stroke-linecap="round"/>'+
     '<path d="M56 62L54 30L84 52Z" fill="#ffd45e" '+S+'/><path d="M144 62L146 30L116 52Z" fill="#ffd45e" '+S+'/>'+
-    '<path d="M60 54L59 40L74 50Z" fill="#ff9bb5"/
+    '<path d="M60 54L59 40L74 50Z" fill="#ff9bb5"/><path d="M140 54L141 40L126 50Z" fill="#ff9bb5"/>'+
+    '<path d="M68 99Q78 93 88 98M112 98Q122 93 132 99" fill="none" '+S+' stroke-width="3"/>'+
+    '<g class="eye"><ellipse cx="78" cy="114" rx="9" ry="12" fill="'+E+'"/><circle cx="81" cy="109" r="4" fill="#fff"/><circle cx="75" cy="119" r="1.8" fill="#fff"/></g>'+
+    '<g class="eye"><ellipse cx="122" cy="114" rx="9" ry="12" fill="'+E+'"/><circle cx="125" cy="109" r="4" fill="#fff"/><circle cx="119" cy="119" r="1.8" fill="#fff"/></g>'+
+    '<ellipse cx="62" cy="130" rx="10" ry="6" fill="#ff8fb0" opacity=".7"/><ellipse cx="138" cy="130" rx="10" ry="6" fill="#ff8fb0" opacity=".7"/>'+
+    '<path d="M91 132Q100 141 109 132" fill="none" '+S+' stroke-width="3.5"/>'+
+    '<path d="M20 72L23 80L31 83L23 86L20 94L17 86L9 83L17 80Z" fill="#ffd45e" '+S+' stroke-width="2.5"/>'+
+    '<path d="M180 52L182 58L188 60L182 62L180 68L178 62L172 60L178 58Z" fill="#ffd45e" '+S+' stroke-width="2.5"/>'+
+    '</svg>';
+}
+var paintCats=paint;
+paint=function(root){
+  paintCats(root);
+  (root||document).querySelectorAll('[data-girl]').forEach(function(el){el.innerHTML=girl()});
+};
+window.RZ={cat:cat,paint:paint,$:$,girl:girl};
+
+/* sound */
+var soundOn=true, ac;
+function meow(){
+  if(!soundOn)return;
+  try{
+    ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+    var t=ac.currentTime,o=ac.createOscillator(),f=ac.createBiquadFilter(),g=ac.createGain();
+    o.type='sawtooth'; f.type='bandpass'; f.Q.value=4;
+    o.frequency.setValueAtTime(420,t); o.frequency.linearRampToValueAtTime(820,t+.18); o.frequency.exponentialRampToValueAtTime(380,t+.6);
+    f.frequency.setValueAtTime(900,t); f.frequency.linearRampToValueAtTime(1800,t+.2); f.frequency.linearRampToValueAtTime(900,t+.6);
+    g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.3,t+.06); g.gain.exponentialRampToValueAtTime(.0001,t+.65);
+    o.connect(f); f.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+.7);
+  }catch(e){}
+}
+window.RZ.meow=meow;
+var sb=$('#soundBtn');
+sb.addEventListener('click',function(){
+  soundOn=!soundOn; sb.setAttribute('aria-pressed',soundOn); sb.textContent='الصوت: '+(soundOn?'خدام':'مطفي'); if(soundOn)meow();
+});
+
+/* theme */
+var root=document.documentElement, tb=$('#themeBtn');
+function isDark(){
+  var t=root.getAttribute('data-theme');
+  return t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+function label(){tb.textContent=isDark()?'الوضع النهاري':'الوضع الليلي'}
+tb.addEventListener('click',function(){root.setAttribute('data-theme',isDark()?'light':'dark'); label()});
+label();
+
+/* hearts */
+function hearts(host,n){
+  var r=host.getBoundingClientRect();
+  for(var i=0;i<n;i++){
+    var h=document.createElement('span'); h.className='heart'; h.textContent='♥';
+    h.style.left=(20+Math.random()*60)+'%'; h.style.top=(30+Math.random()*30)+'%'; h.style.animationDelay=(i*.12)+'s';
+    host.appendChild(h); setTimeout(function(x){x.remove()}.bind(null,h),1400);
+  }
+}
+window.RZ.hearts=hearts;
+
+/* hero */
+var MSGS=['ميياو، أهلا رزان','نورتي الموقع','نتي أحلى صاحبة','واش راكي يا القمر','توحشتك','ربي يحفظك'];
+var mi=0, hero=$('#heroCat'), stage=$('#stage');
+function petHero(){
+  meow(); hearts(stage,4);
+  mi=(mi+1)%MSGS.length; $('#bubble').textContent=MSGS[mi];
+  hero.dataset.mood='happy'; paint(hero.parentNode);
+  hero.classList.remove('hop'); void hero.offsetWidth; hero.classList.add('hop');
+  setTimeout(function(){hero.classList.remove('hop')},650);
+  setTimeout(function(){hero.dataset.mood=''; paint(hero.parentNode)},1000);
+}
+hero.addEventListener('click',petHero);
+hero.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();petHero()}});
+function sayRazan(){meow(); hearts(stage,4); $('#bubble').textContent='هادي نتي يا القمر'}
+$('#girl').addEventListener('click',sayRazan);
+$('#girl').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();sayRazan()}});
+
+/* reasons */
+var REASONS=[
+  ['ضحكتك','تنوّر النهار حتى كي يكون ثقيل.','peach','bow','var(--pink)'],
+  ['ذوقك','في القطط والكرتون ما يغلبك حتى واحد.','snow','scarf','var(--sky)'],
+  ['قلبك','تخلي اللي حواليك يحسو بقيمتهم.','ash','glasses','var(--yellow)'],
+  ['وجودك','الأيام الصعيبة تخف كي تكوني معايا.','butter','crown','var(--mint)'],
+  ['صدقك','معاك نقول اللي في قلبي بلا ما نفكر.','mint','party','var(--lilac)'],
+  ['كلشي فيك','وعلى هادي اخترتك أغلى صاحبة.','night','bow','var(--pink)']
+];
+$('#reasonGrid').innerHTML=REASONS.map(function(r){
+  return '<div class="reason" style="--c:'+r[4]+'"><div data-cat="'+r[2]+'" data-acc="'+r[3]+'"></div><div><b>'+r[0]+'</b><p>'+r[1]+'</p></div></div>';
+}).join('');
+paint();
+})();
+</script>
+<script>
+(function(){
+var R=window.RZ, $=R.$;
+
+/* check-in: directed questions about me (the sender) and what she thinks of me, tied to her day */
+var CI=[
+  ['كي فقتي اليوم، أول واحد جا على بالك؟',
+   ['أنت، بلا تفكير','القهوة قبل كلشي','التيليفون','النعاس باقي معايا'],
+   ['عرفتها! وأنا بزاف نفكر فيك كل نهار.','القهوة نسامحها، بصح المرة الجاية يكون الترتيب مليح.','التيليفون؟ ما يهمش، المهم وصلتي لهنا.','نعسي براحتك، بصح فكري فيا شوية.']],
+  ['ملي بدا نهارك، شحال من مرة ضحكتي معايا؟',
+   ['مرة وحدة برك','جوج مرات','بزاف','ما حسبتش، دايما نضحك معاك'],
+   ['مرة وحدة؟ نزيدلك فالقصة هادي.','جوج مرات، مليح. ونزيدو.','بزاف! هادي هي الحاجة اللي نحب.','هادا بالضبط اللي كنت نستنى فيه.']],
+  ['كي يكون نهارك ثقيل، واش تديري؟',
+   ['نكلمك أنا، طبعا','نخبي ونسكت','نشوف قطط في التيليفون','نبكي وحدي'],
+   ['هادا اللي نحب نسمعو. دايما موجود.','ما تخبيش عليا والو، نحب نسمعك.','القطط مليحين، بصح أنا نضحكك أكثر.','ما تبكيش وحدك، أنا هنا.']],
+  ['قوليلي بصراحة، واش رايك فيا؟',
+   ['قلب كبير','خفيف دم','ثقيل شوية، نمزح!','كلشي مليح فيك'],
+   ['وانتي أكبر منو. نسلم عليك.','نتي اللي تخليني نضحك.','ههه، دروك نسمحلك هادي المرة بصح.','هادا أحلى جواب. يعطيك الصحة.']]
+];
+var ci=$('#checkin'), ck=0;
+function askC(){
+  if(ck>=CI.length){
+    ci.innerHTML='<p class="reply">شكرا على صراحتك، جاوبتي مليح. نزلي لتحت، المفاجآت راهم يستناوك.</p>';
+    R.meow(); R.hearts($('#stage'),5); return;
+  }
+  var q=CI[ck];
+  ci.innerHTML=(ck===0?'<p class="kick">قبل ما نبداو، شوية أسئلة عليا وعلى نهارك</p>':'')+
+    '<span class="step">'+(ck+1)+' من '+CI.length+'</span><p class="q">'+q[0]+'</p><div class="opts">'+
+    q[1].map(function(o,j){return '<button class="opt" type="button" data-j="'+j+'">'+o+'</button>'}).join('')+'</div>';
+}
+ci.addEventListener('click',function(e){
+  var b=e.target.closest('.opt'); if(!b)return;
+  ci.innerHTML='<p class="reply">'+CI[ck][2][+b.dataset.j]+'</p>';
+  R.meow(); ck++; setTimeout(askC,2600);
+});
+askC();
+
+/* memory game */
+var MK=[['peach','crown'],['snow','scarf'],['ash','glasses'],['butter','bow'],['mint','party'],['night','bow']];
+var mg=$('#memGrid'), mm=$('#memMsg'), first=null, lock=false, moves=0, found=0;
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function deal(){
+  first=null; lock=false; moves=0; found=0;
+  $('#moves').textContent=0; $('#pairs').textContent=0; mm.textContent='ابدأي واقلبي أي بطاقة';
+  mg.innerHTML=shuffle(MK.concat(MK)).map(function(c,i){
+    return '<button class="mem" type="button" data-k="'+c[0]+'" aria-label="بطاقة"><span class="face">؟</span><span class="back" data-cat="'+c[0]+'" data-acc="'+c[1]+'"></span></button>';
+  }).join('');
+  R.paint(mg);
+}
+mg.addEventListener('click',function(e){
+  var c=e.target.closest('.mem'); if(!c||lock||c.classList.contains('on')||c.classList.contains('done'))return;
+  c.classList.add('on');
+  if(!first){first=c; return}
+  moves++; $('#moves').textContent=moves;
+  if(first.dataset.k===c.dataset.k){
+    first.classList.remove('on'); c.classList.remove('on'); first.classList.add('done'); c.classList.add('done');
+    first=null; found++; $('#pairs').textContent=found; R.meow();
+    if(found===6){mm.textContent='برافو! كملتيها في '+moves+' حركة. نتي عبقرية.'; R.hearts($('#memGrid').parentNode,5)}
+    else mm.textContent='مليح! كمّلي';
+  }else{
+    lock=true; mm.textContent='قريب، عاودي';
+    var a=first,b=c; first=null;
+    setTimeout(function(){a.classList.remove('on'); b.classList.remove('on'); lock=false},900);
+  }
+});
+$('#memReset').addEventListener('click',deal);
+deal();
+
+/* game */
+var field=$('#field'), HS=['peach','ash','butter','mint','snow','night','peach','ash','butter'];
+field.innerHTML=HS.map(function(k){
+  return '<button class="hole" type="button" aria-label="صندوق"><div class="pop" data-cat="'+k+'"></div><div class="box"></div></button>';
+}).join('');
+R.paint(field);
+var holes=[].slice.call(field.children), sc=0, tm=20, running=false, last=-1, tick, nxt;
+var elS=$('#score'), elT=$('#time'), msg=$('#gameMsg'), play=$('#playBtn');
+function show(){
+  if(!running)return;
+  holes.forEach(function(h){h.classList.remove('up')});
+  var x; do{x=Math.floor(Math.random()*9)}while(x===last);
+  last=x; holes[x].classList.add('up');
+  nxt=setTimeout(show,600+Math.random()*450);
+}
+function stop(){
+  running=false; clearInterval(tick); clearTimeout(nxt);
+  holes.forEach(function(h){h.classList.remove('up')});
+  var best=0; try{best=+localStorage.getItem('rz-best')||0}catch(e){}
+  if(sc>best){best=sc; try{localStorage.setItem('rz-best',best)}catch(e){}}
+  msg.textContent=(sc>=14?'ما شاء الله! نتي ملكة القطط. ':sc>=8?'مليح! قطط بزاف وقعو في يديك. ':'محاولة مليحة، عاودي مرة أخرى. ')+'أحسن نتيجة: '+best;
+  play.disabled=false; play.textContent='نعاودو اللعب';
+}
+play.addEventListener('click',function(){
+  sc=0; tm=20; elS.textContent=0; elT.textContent=20; running=true; play.disabled=true; msg.textContent='يلا!';
+  show();
+  tick=setInterval(function(){tm--; elT.textContent=tm; if(tm<=0)stop()},1000);
+});
+field.addEventListener('click',function(e){
+  var h=e.target.closest('.hole'); if(!h||!running||!h.classList.contains('up'))return;
+  h.classList.remove('up'); sc++; elS.textContent=sc; R.meow();
+});
+
+/* coupons */
+var CP=[
+  ['افتحيها كي تكوني زعفانة','هدري معايا وفرغي كلشي، ونسمع لين تخلصي.','var(--pink)','peach','bow'],
+  ['افتحيها كي تحبي تضحكي','ابعثيلي كلمة "ضحكني" ونبعثلك ميم أو مقطع كرتون يفكها.','var(--sky)','ash','glasses'],
+  ['افتحيها كي ما تقدريش تنعسي','ابعثيلي "ما نعسش" ونسهرو نهدرو لين يجيك النعاس، وأنا معاك.','var(--mint)','mint','party'],
+  ['افتحيها كي تحبي نلعبو','ندخلو نلعبو أونلاين مع بعض، وانتي تختاري اللعبة.','var(--lilac)','snow','scarf']
+];
+var cg=$('#couponGrid');
+cg.innerHTML=CP.map(function(c){
+  return '<button class="coupon" type="button" style="--c:'+c[2]+'"><span class="front"><span data-cat="'+c[3]+'" data-acc="'+c[4]+'"></span>اضغطي هنا</span><span class="back"><h3>'+c[0]+'</h3><p>'+c[1]+'</p></span></button>';
+}).join('');
+R.paint(cg);
+cg.addEventListener('click',function(e){
+  var c=e.target.closest('.coupon'); if(!c)return;
+  if(!c.classList.contains('open')){c.classList.add('open'); R.meow()}
+});
+
+/* letter */
+var TEXT='رزان،\n\nما حبيتش نجيبلك هدية عادية، خاطر نتي ماشي إنسانة عادية.\n\nوجودك في حياتي يخلي النهار أخف وأحلى. معاك نضحك من قلبي ونكون على طبيعتي بلا ما نفكر.\n\nدرتلك الموقع هادا خاطر فيه كلشي تحبيه: قطط تبتسم، وكرتون يرجعنا صغار، ومفاجآت صغار تفكرك شحال راكي غالية عليا.\n\nشكرا خاطر نتي صاحبتي.';
+var FROM='من نبيل';
+$('#openLetter').addEventListener('click',function(e){
+  var btn=e.currentTarget; btn.remove();
+  var p=document.createElement('div'); p.className='paper'; $('#letterBox').appendChild(p);
+  var s=document.createElement('div'); s.className='sign'; s.textContent=FROM; s.hidden=true; $('#letterBox').appendChild(s);
+  R.meow();
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches, n=0;
+  if(reduce){p.textContent=TEXT; s.hidden=false; return}
+  var t=setInterval(function(){
+    n++; p.textContent=TEXT.slice(0,n);
+    if(n>=TEXT.length){clearInterval(t); s.hidden=false; R.hearts($('#letterBox'),5)}
+  },34);
+});
+})();
+</script>
+</body>
+</html>
